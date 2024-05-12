@@ -5,19 +5,16 @@ contract AssertionSmart {
     uint public y;
 
     function requireSmart(uint _value) public {
-        // Require that the value is not zero
         require(_value != 0, "Value cannot be zero");
         x = _value;
     }
 
     function assertSmart(uint _value) public {
-        // Assert that the value is not zero
         assert(_value != 0);
         y = _value;
     }
 
     function revertSmart(uint _value) public {
-        // Revert the transaction if the value is zero
         if (_value == 0) {
             revert("Value cannot be zero");
         }
