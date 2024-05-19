@@ -1,23 +1,70 @@
 pragma solidity ^0.8.0;
 
-contract AssertionSmart {
-    uint public x;
-    uint public y;
-
-    function requireSmart(uint _value) public {
-        require(_value != 0, "Value cannot be zero");
-        x = _value;
+contract custodialsection {
+    struct Prisoner {
+        uint256 id;
+        string name;
+        uint256 age;
+        string crime;
+        bool isReleased;
     }
+    address public admin;
+    uint256 public nextPrisonerId;
+    uint256 public jailCapacity;
+    uint256 public currentPrisonerCount;
+    mapping(uint256 => Prisoner) public prisoners;
 
-    function assertSmart(uint _value) public {
-        assert(_value != 0);
-        y = _value;
+    event PrisonerAdded(uint256 id, string name, uint256 age, string crime);
+    event PrisonerReleased(uint256 id, string name);
+
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "Only admin can perform this action");
+        _;
     }
+    modifier prisonerExists(uint256 _id) {
+        require(_id < nextPrisonerId, "Prisoner does not exist");
+        _;
+    }
+    modifier hasCapacity() {
+        require(currentPrisonerCount < jailCapacity, "Jail has reached its capacity");
+        _;
+    }
+    constructor(uint256 _jailCapacity) {
+        admin = msg.sender;
+        jailCapacity = _jailCapacity;
+        nextPrisonerId = 0;
+        currentPrisonerCount = 0;
+    }
+    function addPrisoner(string memory _name, uint256 _age, string memory _crime) public onlyAdmin hasCapacity {
+        require(bytes(_name).length > 0, "Name cannot be empty");
+        require(_age > 0, "Age must be positive");
+        require(bytes(_crime).length > 0, "Crime cannot be empty");
 
-    function revertSmart(uint _value) public {
-        if (_value == 0) {
-            revert("Value cannot be zero");
-        }
-        x = _value;
+        prisoners[nextPrisonerId] = Prisoner(nextPrisonerId, _name, _age, _crime, false);
+        emit PrisonerAdded(nextPrisonerId, _name, _age, _crime);
+        nextPrisonerId++;
+        currentPrisonerCount++;
+    }
+    function releasePrisoner(uint256 _id) public onlyAdmin prisonerExists(_id) {
+        Prisoner storage prisoner = prisoners[_id];
+        require(!prisoner.isReleased, "Prisoner is already released");
+
+        prisoner.isReleased = true;
+        currentPrisonerCount--;
+        emit PrisonerReleased(prisoner.id, prisoner.name);
+    }
+    function getPrisoner(uint256 _id) public view prisonerExists(_id) returns (string memory name, uint256 age, string memory crime, bool isReleased) {
+        Prisoner storage prisoner = prisoners[_id];
+        return (prisoner.name, prisoner.age, prisoner.crime, prisoner.isReleased);
+    }
+    function changeAdmin(address newAdmin) public onlyAdmin {
+        require(newAdmin != address(0), "New admin address cannot be zero");
+        admin = newAdmin;
+    }
+    function assertExample() public view {
+        assert(admin != address(0)); 
+    }
+    function revertExample() public pure {
+        revert("This function always reverts");
     }
 }
