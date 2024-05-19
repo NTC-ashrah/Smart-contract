@@ -1,4 +1,5 @@
 Custodial Section Smart Contract
+
 Overview
 The Custodial Section smart contract is designed to manage prisoner records within a jail system on the Ethereum blockchain. It provides functionalities for adding and releasing prisoners, while ensuring only the administrator can perform these actions. The contract also maintains the jail's capacity and current prisoner count, ensuring that the jail does not exceed its capacity.
 
