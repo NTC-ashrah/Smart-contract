@@ -1,65 +1,77 @@
-Custodial Section Smart Contract
+Metacrafters ATM DApp
+Welcome to the Metacrafters ATM! This decentralized application (DApp) allows users to interact with an Ethereum smart contract to deposit and withdraw Ether (ETH). The application leverages MetaMask for wallet integration and the ethers.js library for blockchain interactions.
 
-Overview
-The Custodial Section smart contract is designed to manage prisoner records within a jail system on the Ethereum blockchain. It provides functionalities for adding and releasing prisoners, while ensuring only the administrator can perform these actions. The contract also maintains the jail's capacity and current prisoner count, ensuring that the jail does not exceed its capacity.
+Table of Contents
+Introduction
+Features
+Prerequisites
+Installation
+Usage
+Code Overview
+License
+Introduction
+The Metacrafters ATM DApp is designed to provide a simple interface for users to deposit and withdraw ETH from their accounts. It connects to an Ethereum smart contract deployed at a specific address and uses MetaMask for user authentication and transaction signing.
 
 Features
-Prisoner Management: Allows for the addition and release of prisoners with detailed information.
-Access Control: Ensures that only the admin can perform critical operations like adding or releasing prisoners.
-Capacity Control: Monitors the jail's capacity to prevent overpopulation.
-Event Logging: Emits events for adding and releasing prisoners, facilitating tracking and transparency.
-Error Handling: Utilizes require, assert, and revert statements for robust error handling and validation.
-Key Components
-Prisoner Struct
-The contract uses a Prisoner struct to store each prisoner's details, including their unique ID, name, age, crime committed, and release status.
+Connect to MetaMask wallet
+Display connected account address and balance
+Deposit ETH to the smart contract
+Withdraw ETH from the smart contract
+Prerequisites
+Before you begin, ensure you have the following installed:
 
-State Variables
-Admin: The address of the contract administrator.
-Next Prisoner ID: A counter used to assign unique IDs to prisoners.
-Jail Capacity: The maximum number of prisoners the jail can hold.
-Current Prisoner Count: The current number of prisoners in the jail.
-Prisoners Mapping: A mapping to store prisoner details indexed by their ID.
-Events
-PrisonerAdded: Emitted when a new prisoner is added.
-PrisonerReleased: Emitted when a prisoner is released.
-Modifiers
-onlyAdmin: Restricts function access to the admin.
-prisonerExists: Ensures that a prisoner with a given ID exists.
-hasCapacity: Ensures that the jail has not reached its capacity.
-Constructor
-The constructor initializes the contract by setting the admin to the deployer's address, setting the jail capacity, and initializing counters for prisoner IDs and the current prisoner count.
+Node.js (version 14 or higher)
+MetaMask browser extension
+An Ethereum test network (e.g., Rinkeby, Goerli)
+Installation
+Clone the repository:
 
-Functions
-Adding a Prisoner
-The addPrisoner function allows the admin to add a new prisoner to the jail. It checks for valid input data and ensures the jail has capacity. Upon successful addition, it updates the prisoner mapping and increments relevant counters.
+bash
+Copy code
+git clone https://github.com/your-username/metacrafters-atm.git
+cd metacrafters-atm
+Install dependencies:
 
-Releasing a Prisoner
-The releasePrisoner function allows the admin to release a prisoner. It ensures the prisoner exists and has not already been released. Upon successful release, it updates the prisoner's status and decrements the current prisoner count.
-
-Retrieving Prisoner Details
-The getPrisoner function allows anyone to retrieve a prisoner's details by providing the prisoner's ID. It ensures the prisoner exists before returning their details.
-
-Changing the Admin
-The changeAdmin function allows the current admin to transfer admin rights to a new address. It ensures the new admin address is valid.
-
-Assert and Revert Examples
-The contract includes example functions (assertExample and revertExample) to demonstrate the use of assert and revert statements for error handling.
+bash
+Copy code
+npm install
+Ensure you have the smart contract ABI available in the specified path: ../artifacts/contracts/Assessment.sol/Assessment.json.
 
 Usage
-Deploy the Contract
+Start the development server:
 
-Deploy the contract with the specified jail capacity.
-The deployer's address is set as the admin.
-Admin Actions
+bash
+Copy code
+npm run dev
+Open your browser and navigate to http://localhost:3000.
 
-Add prisoners using the addPrisoner function.
-Release prisoners using the releasePrisoner function.
-Change admin using the changeAdmin function.
-Public Actions
+Connect your MetaMask wallet when prompted.
 
-Retrieve prisoner details using the getPrisoner function.
+Use the interface to deposit and withdraw ETH.
+
+Code Overview
+State Variables
+ethWallet: Stores the MetaMask wallet instance.
+account: Stores the connected account address.
+atm: Stores the instance of the smart contract.
+balance: Stores the current balance of the user in the smart contract.
+amount: Stores the amount to be deposited or withdrawn.
+Functions
+getWallet: Checks for the presence of MetaMask and sets the wallet instance.
+handleAccount: Handles the connected account and sets the account state.
+connectAccount: Connects to the MetaMask wallet and retrieves accounts.
+getATMContract: Creates a contract instance using ethers.js.
+getBalance: Fetches the user's balance from the smart contract.
+deposit: Deposits the specified amount of ETH into the smart contract.
+withdraw: Withdraws the specified amount of ETH from the smart contract.
+initUser: Initializes the user interface based on the wallet and account state.
+Components
+HomePage: The main component that renders the UI and manages the state and interactions.
+Usage of useEffect
+The useEffect hook is used to initialize the wallet when the component mounts.
+
+Smart Contract Interaction
+The contract address and ABI are used to create a contract instance with ethers.js, allowing for interaction with the deployed smart contract.
+
 License
-This project is licensed under NTC-Ashrah License. See the LICENSE file for details.
-
-Author
-[NTC-OLIVAR] - Initial work and concept.
+This project is licensed under the MIT License. See the LICENSE file for details.
